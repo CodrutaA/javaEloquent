@@ -1,4 +1,3 @@
-/*
 // CAP 6  -  THE SECRET LIFE OF OBJECTS
 // Encapsulation - Methods
 // 1
@@ -362,7 +361,6 @@ console.log(new Matrix(2, 2) instanceof SymmetricMatrix);
 console.log([1] instanceof Array);
 // ! true
 
-*/
 
 // Exercises
 // A Vector Type
@@ -464,6 +462,56 @@ would work, but it defeats the purpose of this exercise.
 It is okay if your iterator behaves strangely when the group is modified
 during iteration.*/
 
+class Group {
+    constructor(){
+        this.group = [];
+    }
+    has(item){
+        return this.group.includes(item);
+    }
+    add(item){
+        if(!this.group.includes(item)){
+            this.group.push(item);
+        }
+    }
+    delete(item){
+        let index = this.group.indexOf(item);
+        if (index !== -1) {
+            this.group.splice(index, 1);
+        }
+    }
+    static from(a) {
+        let g = new Group();
+        for (let item of a) {
+          g.add(item);
+        }
+        return g;
+      }
+    [Symbol.iterator](){
+        return new GroupIterator(this);
+    }
+  }
+
+class GroupIterator{
+    constructor(c){
+        this.i = 0;
+        this.group = c.group;
+    }
+    next(){
+        if(this.i == this.group.length)
+        return{done: true};
+        let value = this.group[this.i];
+        this.i++;
+        return {value, done:false};
+    }
+}
+
+for (let value of Group.from(["a", "b", "c"])) {
+    console.log(value);
+}
+// → a
+// → b
+// → c
 
 // Borrowing a Method
 /*Earlier in the chapter I mentioned that an object’s hasOwnProperty can be
@@ -473,3 +521,14 @@ the prototype’s properties. But what if your map needs to include the word
 object’s own property hides the method value.
 Can you think of a way to call hasOwnProperty on an object that has its own
 property by that name?*/
+
+let map = {one: true, two: true, hasOwnProperty: true};
+
+// Fix this call
+//console.log(map.hasOwnProperty("one"));
+// → true
+
+console.log(Object.prototype.hasOwnProperty(map,"one"));
+// false
+console.log(hasOwnProperty.call(map,"one"));
+//true
