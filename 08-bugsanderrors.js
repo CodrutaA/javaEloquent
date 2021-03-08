@@ -280,7 +280,7 @@ const box = {
   }
   console.log(box.locked);
   console.log(box.unlock);
-  console.log(box.withBoxUnlocked.content);
+  console.log(box.withBoxUnlocked);
 
   // → true
 
